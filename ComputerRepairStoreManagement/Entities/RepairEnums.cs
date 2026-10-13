@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace ComputerRepairStoreManagement.Entities
 {
     public enum RepairCategory
     {
-        Hardware,
-        Software
+        Hardware = 1,
+        Software = 2
     }
+
     public enum RepairStatus
     {
-        Pending,
-        InProgress,
-        Completed
+        Pending = 1,
+        InProgress = 2,
+        Completed = 3
     }
 }

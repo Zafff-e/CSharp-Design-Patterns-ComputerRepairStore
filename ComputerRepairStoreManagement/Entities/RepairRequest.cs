@@ -1,14 +1,15 @@
-﻿using System;
+using ComputerRepairStoreManagement.Exceptions;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComputerRepairStoreManagement.Entities
 {
     public class RepairRequest
     {
-        public RepairRequest() { }
+        public RepairRequest()
+        {
+            RequiredParts = new List<string>();
+        }
 
         public RepairRequest(
             int requestId,
@@ -39,5 +40,15 @@ namespace ComputerRepairStoreManagement.Entities
         public double TotalEstimate { get; set; }
         public double AdvancePaid { get; set; }
         public int WarrantyPeriodMonths { get; set; }
+
+        public void Validate()
+        {
+            if (string.IsNullOrWhiteSpace(CustomerName))
+                throw new InvalidRepairRequestException("Customer name cannot be empty.");
+            if (string.IsNullOrWhiteSpace(DeviceDetails))
+                throw new InvalidRepairRequestException("Device details cannot be empty.");
+            if (AdvancePaid < 0)
+                throw new InvalidRepairRequestException("Advance paid cannot be negative.");
+        }
     }
 }

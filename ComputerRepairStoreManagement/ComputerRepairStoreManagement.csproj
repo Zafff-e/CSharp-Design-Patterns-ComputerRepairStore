@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="Entities\RepairEnums.cs" />
     <Compile Include="Entities\RepairRequest.cs" />
+    <Compile Include="Exceptions\InvalidRepairRequestException.cs" />
+    <Compile Include="Services\PricingCalculator.cs" />
     <Compile Include="Factory\HardwareRepairFactory.cs" />
     <Compile Include="Factory\RepairFactory.cs" />
     <Compile Include="Factory\SoftwareRepairFactory.cs" />

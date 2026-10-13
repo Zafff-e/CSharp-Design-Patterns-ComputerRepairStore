@@ -1,6 +1,8 @@
 ﻿using ComputerRepairStoreManagement.Entities;
 using ComputerRepairStoreManagement.Factory;
 using ComputerRepairStoreManagement.Repositories;
+using ComputerRepairStoreManagement.Exceptions;
+using ComputerRepairStoreManagement.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,6 +106,18 @@ namespace ComputerRepairStoreManagement
 
             RepairRequest ticket = new RepairRequest(0, name, device, desc, category);
             ticket.AdvancePaid = advance;
+
+            try
+            {
+                ticket.Validate();
+            }
+            catch (InvalidRepairRequestException ex)
+            {
+                Yellow();
+                Console.WriteLine($"\n  [Validation Error]: {ex.Message}");
+                Reset();
+                return;
+            }
 
             RepairFactory factory = null;
             if (category == RepairCategory.Hardware)
@@ -213,6 +227,18 @@ namespace ComputerRepairStoreManagement
             Console.Write($"  Existing Advance Paid: {t2.AdvancePaid}\n  New Advance: ");
             t2.AdvancePaid = Convert.ToDouble(Console.ReadLine());
 
+            try
+            {
+                t2.Validate();
+            }
+            catch (InvalidRepairRequestException ex)
+            {
+                Yellow();
+                Console.WriteLine($"\n  [Validation Error]: {ex.Message}");
+                Reset();
+                return;
+            }
+
             RepairFactory factory = (t2.Category == RepairCategory.Hardware)
                 ? (RepairFactory)new HardwareRepairFactory(t2)
                 : new SoftwareRepairFactory(t2);
@@ -257,9 +283,7 @@ namespace ComputerRepairStoreManagement
 
         static double HolidayDiscount(RepairRequest t)
         {
-            string combined = ((t.ProblemDescription ?? "") + " " + (t.DeviceDetails ?? "")).ToLower();
-            return (combined.Contains("laptop") || combined.Contains("macbook"))
-                ? Math.Round(t.TotalEstimate * 0.10, 2) : 0;
+            return PricingCalculator.CalculateHolidayDiscount(t);
         }
 
         static string StatusLabel(RepairStatus s)
